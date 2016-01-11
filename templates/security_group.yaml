@@ -1,0 +1,22 @@
+heat_template_version: 2013-05-23
+
+parameters:
+  name:
+    type: string
+    description: security group name
+
+resources:
+  server_security_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: Neutron security group.
+      name: { get_param: name }
+      rules: [
+        {remote_ip_prefix: 0.0.0.0/0},
+        {direction: egress,
+        remote_ip_prefix: 0.0.0.0/0},
+        {ethertype: IPv6,
+        remote_ip_prefix: "::/0"},
+        {direction: egress,
+        ethertype: IPv6,
+        remote_ip_prefix: "::/0"}]

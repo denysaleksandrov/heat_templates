@@ -1,0 +1,20 @@
+heat_template_version: 2013-05-23
+
+description: >
+  HOT template to creates a virtual network, subnet and VM
+
+parameters:
+  sg_name:
+    type: string
+    description: Name of virtual network to be created
+  server_name:
+    type: string
+    description: Name of the server
+
+resources:
+  server:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: server_name }
+      security_groups: [{ get_param: sg_name }]
+

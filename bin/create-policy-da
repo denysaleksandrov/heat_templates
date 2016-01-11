@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [[ $# -ne 4 && $# -ne 2 ]]; then
+	echo "Usage: create-policy tenant-name policy-name VN1 VN2"
+	echo "Example: create-policy harpo harpo-policy vn1 vn2"
+    echo "or"
+	echo "Usage: create-policy tenant-name policy-name "
+	echo "Example: create-policy harpo harpo-policy"
+        exit 1
+fi
+
+args=("$@")
+TENANT=${args[0]}
+PNAME=${args[1]}
+
+if [[ $# -eq 4 ]]; then
+    VN1=${args[1]}
+    VN2=${args[2]}
+    heat --os-tenant-name $TENANT stack-create $PNAME-policy -f $TMPLT_DIR/network_policy_da.yaml -P "policy_name=$PNAME;net_1_name=$VN1;net_2_name=$VN2"
+elif [[ $# -eq 2 ]]; then
+    heat --os-tenant-name $TENANT stack-create $PNAME-policy -f $TMPLT_DIR/network_policy_da.yaml -P "policy_name=$PNAME"
+fi

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [[ $# -ne 5 ]]; then
+	echo "Usage: deploy-vm tenant-name VN image flavor vid"
+	echo "Example: deploy-vm harpo vn1 vm-iperf m1.small 1"
+        exit 1
+fi
+
+args=("$@")
+TENANT=${args[0]}
+VN=${args[1]}
+IMAGE=${args[2]}
+FLAVOR=${args[3]}
+VID=${args[4]}
+
+SERVER_NAME=vm-$VN-$VID
+
+heat --os-tenant-name $TENANT stack-create $SERVER_NAME -f $TMPLT_DIR/deploy_vm_da.yaml -P "net_name=$VN;server_name=$SERVER_NAME;image=$IMAGE;flavor=$FLAVOR"

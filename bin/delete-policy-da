@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [[ $# -ne 2 ]]; then
+	echo "Usage: delete-policy tenant-name policy-name"
+        exit 1
+fi
+
+args=("$@")
+TENANT=${args[0]}
+PNAME=${args[1]}
+
+heat --os-tenant-name $TENANT stack-delete $PNAME-policy

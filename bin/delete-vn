@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ $# -ne 2 ]]; then
+	echo "Usage: delete-vn tenant-name vn_name"
+	echo "Example: delete-vn harpo harpo1"
+        exit 1
+fi
+
+args=("$@")
+TENANT=${args[0]}
+VNNAME=${args[1]}
+
+heat --os-tenant-name $TENANT stack-delete $TENANT-vn-$VNNAME

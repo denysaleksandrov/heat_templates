@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ $# -ne 4 ]]; then
+	echo "Usage: create-vn tenant-name vn-name ip-prefix defaultgw"
+	echo "Example: create-vn harpo harpo1 192.168.1.0/32 192.168.1.1"
+        exit 1
+fi
+
+args=("$@")
+TENANT=${args[0]}
+VNNAME=${args[1]}
+IP_PREFIX=${args[2]}
+DEFAULT_GW=${args[3]}
+
+heat --os-tenant-name $TENANT stack-create $TENANT-vn-$VNNAME -f $TMPLT_DIR/virtual_network_da.yaml  -P "net_name=$VNNAME;ip_prefix=$IP_PREFIX;default_gateway=$DEFAULT_GW"

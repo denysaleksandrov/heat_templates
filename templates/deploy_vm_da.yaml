@@ -1,0 +1,36 @@
+heat_template_version: 2013-05-23
+
+description: >
+  HOT template to creates a virtual network, subnet and VM
+
+parameters:
+  net_name:
+    type: string
+    description: Name of virtual network to be created
+  server_name:
+    type: string
+    description: Name of the server
+  image:
+    type: string
+    description: Name of image to use for servers
+  flavor:
+    type: string
+    description: Flavor to use for servers
+
+resources:
+  server:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: server_name }
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+      networks: 
+        - port: { get_resource: eth0 }
+
+  eth0:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: net_name }
+      security_groups:
+        - default
+

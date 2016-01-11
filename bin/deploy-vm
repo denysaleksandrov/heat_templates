@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [[ $# -ne 6 ]]; then
+	echo "Usage: deploy-vm tenant-name vid ip_prefix(cidr) default_gateway ipam_name image flavor"
+	echo "Example: deploy-vm harpo 1 192.168.1.0/24 192.168.1.254 vm-iperf m1.small"
+        exit 1
+fi
+
+args=("$@")
+TENANT=${args[0]}
+VID=${args[1]}
+IP_PREFIX=${args[2]}
+DEFAULT_GW=${args[3]}
+IMAGE=${args[4]}
+FLAVOR=${args[5]}
+
+NET_NAME=$TENANT-vnet-$VID
+SUBNET_NAME=$TENANT-subnet-$VID
+SERVER_NAME=$TENANT-vm-$VID
+
+heat --os-tenant-name $TENANT stack-create  $NET_NAME -f $TMPLT_DIR/deploy_vm_da.yaml -P "net_name=$NET_NAME;subnet_name=$SUBNET_NAME;ip_prefix=$IP_PREFIX;default_gateway=$DEFAULT_GW;server_name=$SERVER_NAME;image=$IMAGE;flavor=$FLAVOR"

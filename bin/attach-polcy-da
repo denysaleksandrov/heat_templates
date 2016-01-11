@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ $# -ne 3 ]]; then
+	echo "Usage: create-policy tenant-name policy-name VN"
+	echo "Example: create-policy harpo harpo-policy vn1"
+	echo "Example: create-policy harpo harpo-policy vn2"
+        exit 1
+fi
+
+args=("$@")
+TENANT=${args[0]}
+PNAME=${args[1]}
+VN=${args[2]}
+
+heat --os-tenant-name $TENANT stack-create $PNAME-attach-to-$VN -f $TMPLT_DIR/attach_policy_da.yaml -P "policy_name=$PNAME;net_1_name=$VN;tenant_name=$TENANT"

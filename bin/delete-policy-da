@@ -1,12 +1,13 @@
 #!/bin/bash
 
-if [[ $# -ne 2 ]]; then
-	echo "Usage: delete-policy tenant-name policy-name"
+if [[ $# -ne 3 ]]; then
+	echo "Usage: delete-policy tenant-name policy-name VN"
         exit 1
 fi
 
 args=("$@")
 TENANT=${args[0]}
 PNAME=${args[1]}
+VN=${args[2]}
 
-heat --os-tenant-name $TENANT stack-delete $PNAME-policy
+heat --os-tenant-name $TENANT stack-delete $PNAME-attach-to-$VN

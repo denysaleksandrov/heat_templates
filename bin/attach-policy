@@ -12,4 +12,4 @@ TENANT=${args[0]}
 PNAME=${args[1]}
 VN=${args[2]}
 
-heat --os-tenant-name $TENANT stack-create $PNAME-attach-to-$VN -f $TMPLT_DIR/attach_policy_da.yaml -P "policy_name=$PNAME;net_1_name=$VN;tenant_name=$TENANT"
+heat --os-tenant-name $TENANT stack-create $PNAME-attach-to-$VN -f $TMPLT_DIR/attach_policy_da2.yaml -P "policy_name=default-domain:$TENANT:$PNAME;net_1_name=$VN"

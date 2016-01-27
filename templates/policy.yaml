@@ -32,15 +32,15 @@ parameters:
     type: string
     description: service to apply
     default: pass
-  net_1_name:
+  vn1:
     type: string
     description: Name of network to be created
     default: any
-  net_2_name:
+  vn2:
     type: string
     description: Name of network to be created
     default: any
-  net_protocol:
+  protocol:
     type: string
     description: Name of service instance
     default: any
@@ -55,12 +55,12 @@ resources:
         policy_rule: [
               { 
                 "direction": { get_param: direction }, 
-                "protocol": { get_param: net_protocol },
+                "protocol": { get_param: protocol},
                 "src_ports": [{"start_port": {get_param: start_src_ports}, "end_port": {get_param: end_src_ports}}],
                 "dst_ports": [{"start_port": {get_param: start_dst_ports}, "end_port": {get_param: end_dst_ports}}],
-                "dst_addresses": [{ "virtual_network": {get_param: net_1_name}}], 
+                "dst_addresses": [{ "virtual_network": {get_param: vn1}}], 
                 "action_list": {"simple_action": {get_param: action}}, 
-                "src_addresses": [{ "virtual_network": {get_param: net_2_name}}] 
+                "src_addresses": [{ "virtual_network": {get_param: vn2}}] 
               }, 
         ]
 

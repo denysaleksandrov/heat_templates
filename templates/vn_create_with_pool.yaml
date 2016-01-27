@@ -1,0 +1,93 @@
+heat_template_version: 2013-05-23
+
+description: >
+  HOT template to creates a virtual network, subnet
+
+parameters:
+  net_name:
+    type: string
+    description: Name of virtual network to be created
+  shared:
+    type: string
+    description: Is virtual network shared
+    default: False
+  external:
+    type: string
+    description: Is virtual network external
+    default: False
+  net_extend:
+    type: comma_delimited_list
+    description: physical routers where we extend this vn
+    default: []
+  forwarding_mode:
+    type: string
+    description: forwarding mode of the virtual network, allowed l2_l3, l2
+    default: l2_l3 
+  allow_transit:
+    type: string
+    description: Whether this network should be transitive.
+    default: False
+  forward_unknown:
+    type: string
+    description: Whether this network should forward unknown unicast.
+    default: False
+  ip_prefix:
+    type: string
+    description: The CIDR
+  default_gateway:
+    type: string
+    description: The default gateway
+  dhcp:
+    type: string
+    description: Enable DHCP (True or False)
+    default: True
+  dns_nameservers:
+    description: DNS Nameservers list
+    type: comma_delimited_list
+    default: []
+  addr_from_start:
+    type: string
+    description: allocate from start
+    default: True
+  route_targets:
+    description: RT list
+    type: comma_delimited_list
+    default: []
+  net_pool_start:
+    type: string
+    description: Start of network IP address allocation pool
+  net_pool_end:
+    type: string
+    description: End of network IP address allocation pool
+
+resources:
+  virtual_network:
+    type: OS::Contrail::VirtualNetworkDA
+    properties:
+      name:                    { get_param: net_name }
+      shared:                  { get_param: shared }
+      external:                { get_param: external }
+      route_targets:           { get_param: route_targets }
+      forwarding_mode:         { get_param: forwarding_mode }
+      allow_transit:           { get_param: allow_transit }
+      forward_unknown_unicast: { get_param: forward_unknown }
+      extend:                  { get_param: net_extend }
+
+  virtual_subnet:
+    type: OS::Contrail::VnSubnet
+    depends_on: virtual_network
+    properties:
+      network:         { get_resource: virtual_network }
+      ip_prefix:       { get_param: ip_prefix }
+      default_gateway: { get_param: default_gateway }
+      enable_dhcp:     { get_param: dhcp }
+      dns_nameservers: { get_param: dns_nameservers }
+      addr_from_start: { get_param: addr_from_start }
+      allocation_pools:
+        - start: { get_param: net_pool_start }
+          end: { get_param: net_pool_end }
+
+outputs:
+  dns_servers:
+    description: dns servers
+    value: { get_attr: [ virtual_subnet, dnses ]} 

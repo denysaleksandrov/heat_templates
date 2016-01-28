@@ -70,11 +70,17 @@ elif args.which == 'create':
     items = ["{}={}".format(k,v) 
              for k,v in args.__dict__.iteritems() 
                  if k not in ['tenant', 'pname', 'which'] and v != None]
-    pipe = Popen(['heat', '--os-tenant-name', args.tenant, 'stack-create',
+    if items != []:
+        pipe = Popen(['heat', '--os-tenant-name', args.tenant, 'stack-create',
             args.tenant + '-' + args.pname, '-f',
             '{}/policy.yaml'.format(os.getenv('TMPLT_DIR')), '-P',
             'policy_name={};{}'.format(args.pname, ';'.join(items))],
             stdout=PIPE)
+    elif items == []:
+        pipe = Popen(['heat', '--os-tenant-name', args.tenant, 'stack-create',
+            args.tenant + '-' + args.pname, '-f',
+            '{}/policy.yaml'.format(os.getenv('TMPLT_DIR')), '-P',
+            'policy_name={}'.format(args.pname)], stdout=PIPE)
     print pipe.stdout.read()
     time.sleep(5)
     pipe = Popen(['slist', args.tenant], stdout=PIPE)

@@ -163,14 +163,16 @@ class NetworkPolicy(ContrailResource):
     def fix_vn_to_fqname(self, props, project_fq_name):
         for policy_rule in props['entries']['policy_rule']:
             for dest_address in policy_rule['dst_addresses']:
-                if ':' in dest_address['virtual_network']:
+                if ':' in dest_address['virtual_network'] or \
+                    dest_address['virtual_network'] == 'any':
                     continue
                 else:
                     vn_name = project_fq_name[:]
                     vn_name.append(dest_address['virtual_network'])
                     dest_address['virtual_network'] = ':'.join(vn_name)
             for src_address in policy_rule['src_addresses']:
-                if ':' in src_address['virtual_network']:
+                if ':' in src_address['virtual_network'] or \
+                    src_address['virtual_network'] == 'any':
                     continue
                 else:
                     vn_name = project_fq_name[:]

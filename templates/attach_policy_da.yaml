@@ -10,6 +10,9 @@ parameters:
   net_1_name:
     type: string
     description: Name of network to be created
+  tenant: 
+    type: string
+    description: Tenant name
 
 resources:
   policy_attach_net1:
@@ -17,4 +20,5 @@ resources:
     properties:
       network: { get_param: net_1_name }
       policy:  { get_param: policy_name }
+      tenant:  { get_param: tenant }
 
